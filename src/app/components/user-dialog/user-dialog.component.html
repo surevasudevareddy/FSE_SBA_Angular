@@ -1,0 +1,20 @@
+<mat-toolbar color="primary">Select {{title}}</mat-toolbar>
+<div class="basic-container">
+<mat-dialog-content >
+        <p>
+        <mat-form-field>
+            <mat-select [formControl]="userCtrl" placeholder="{{title}}" #singleSelect>
+            <mat-select-search [formControl]="userFilterCtrl"></mat-select-search>
+            <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                {{user.firstName}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+        </p>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="close()">Close</button>
+    <button class="mat-raised-button mat-primary" [mat-dialog-close]="userCtrl.value" cdkFocusInitial>Save</button>
+</mat-dialog-actions>
+</div>

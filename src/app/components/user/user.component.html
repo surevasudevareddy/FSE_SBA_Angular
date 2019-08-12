@@ -1,0 +1,87 @@
+<div class="mat-elevation-z8">
+<form [formGroup]="restService.form" class="normal-form" (ngSubmit)="onSubmit(restService.form.value)" name="addUserForm">
+    <mat-grid-list cols="2" rowHeight="200px">
+        <mat-grid-tile>
+            <div class="controles-container">
+                <input type="hidden" formControlName='userId'>
+                <mat-form-field>
+                  <input formControlName='firstName' matInput placeholder="First Name">
+                  <mat-error *ngIf="restService.form.controls['firstName'].errors?.required">This Field is Manditory.</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName='lastName' matInput placeholder="Last Name">
+                    <mat-error *ngIf="restService.form.controls['lastName'].errors?.required">This Field is Manditory.</mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input formControlName='employeeId' matInput placeholder="Employee Id">
+                    <mat-error *ngIf="restService.form.controls['employeeId'].errors?.required">This Field is Manditory.</mat-error>
+                    <mat-error *ngIf="restService.form.controls['employeeId'].errors?.pattern">Employee Id Patter is : EMPXXXX (XXX is Number).</mat-error>
+                </mat-form-field>
+            </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="controles-container">
+                   <div class="button-row">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="restService.form.invalid">{{restService.form.controls['userId'].value?"Update":"Add"}}</button>
+                    <button mat-raised-button color="warn" type="button" (click)="onClear()">Reset</button>
+                </div>
+                </div>
+        </mat-grid-tile>      
+    </mat-grid-list>    
+</form>
+</div>
+
+<div class="search-div">
+    <button mat-raised-button  (click)="onCreate()">
+        <mat-icon>search</mat-icon>
+      </button>
+    <mat-form-field class="search-form-field" floatLabel="never">
+      <input matInput [(ngModel)]="searchKey" placeholder="Search" autocomplete="off" (keyup)="applyFilter()">
+      <button mat-button matSuffix mat-icon-button aria-label="Clear" *ngIf="searchKey"  (click)="onSearchClear()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+<div class="mat-elevation-z8">
+    <mat-table [dataSource]="listData"  matSort>
+        <ng-container matColumnDef="firstName">
+          <mat-header-cell *matHeaderCellDef  mat-sort-header>First Name</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.firstName}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="userId">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>User Id</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.userId}}</mat-cell>
+          </ng-container>
+        <ng-container matColumnDef="lastName">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>Last Name</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.lastName}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="employeeId">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>Employee Id</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.employeeId}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <button mat-icon-button (click)="onEdit(row)"><mat-icon>launch</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="onDelete(row.userId)"><mat-icon>delete_outline</mat-icon></button>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="loading">
+              <mat-footer-cell *matFooterCellDef colspan="5">
+                Loading data...
+              </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell *matFooterCellDef colspan="5">
+                No data..
+              </mat-footer-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+    </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" showFirstLastButtons></mat-paginator>    
+  </div>

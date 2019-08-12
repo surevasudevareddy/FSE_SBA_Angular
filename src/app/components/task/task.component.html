@@ -1,0 +1,74 @@
+<div class="mat-elevation-z8">
+    <form [formGroup]="service.form" class="normal-form" (submit)="onSubmit(service.form.value)">
+        <mat-grid-list cols="1" rowHeight="510px">
+            <mat-grid-tile>
+                <div class="controles-container">
+                    <input type="hidden" formControlName='taskId'>
+                    <input type="hidden" formControlName='parentId'>
+                    <input type="hidden" formControlName='projectId'>
+                    <input type="hidden" formControlName='userId'>                    
+                    <div class="add-bottom-padding">                                                       
+                        <mat-form-field>
+                          <input matInput formControlName="projectName" placeholder="Project:" readonly> 
+                          <mat-error *ngIf="service.form.controls['projectName'].errors?.required && (service.form.controls['projectName'].dirty || service.form.controls['projectName'].touched)">This Field is Manditory.</mat-error>                           
+                        </mat-form-field>
+                        <button mat-button mat-icon-button mat-raised-button color="primary" type="button" (click)="searchProject()">
+                            <mat-icon>search</mat-icon>
+                        </button>                          
+                    </div>
+                    <mat-form-field>
+                        <input formControlName='taskName' matInput placeholder="Task Name">
+                        <mat-error *ngIf="service.form.controls['taskName'].errors?.required && (service.form.controls['taskName'].dirty || service.form.controls['taskName'].touched)">This Field is Manditory.</mat-error>
+                    </mat-form-field>
+                    <div class="add-bottom-padding">
+                      <mat-checkbox formControlName='chkPTask' (change)="enableParent()" labelPosition='after'><p>Parent Task</p></mat-checkbox>
+                    </div>
+                    <div class="add-bottom-padding">
+                        <mat-label>Priority:</mat-label>
+                        <span class="fill-remaining-space"></span>
+                      <mat-slider  [displayWith]="formatLabel" formControlName="priority" tickInterval="1" autoTicks=true showTicks=true  min="1"  max="30" step="1" thumbLabel=true></mat-slider>
+                    </div>
+                    <div class="add-bottom-padding">                                                       
+                        <mat-form-field>
+                          <input matInput formControlName="parentTaskName" placeholder="Parent Task:" readonly> 
+                          <mat-error *ngIf="service.form.controls['parentTaskName'].errors?.required&& (service.form.controls['parentTaskName'].dirty || service.form.controls['parentTaskName'].touched)">This Field is Manditory.</mat-error>                           
+                        </mat-form-field>
+                        <button mat-button mat-icon-button mat-raised-button color="primary" type="button" (click)="searchParent()">
+                            <mat-icon>search</mat-icon>
+                        </button>                          
+                    </div>
+                    <div class="add-bottom-padding">
+                        <mat-form-field >
+                            <input formControlName='startDate' matInput [matDatepicker]="picker" placeholder="Start Date:" >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-error *ngIf="service.form.controls['startDate'].errors?.requiredFromDate">This Field is Manditory.</mat-error>
+                        </mat-form-field>
+                        
+                        <mat-form-field class="buton-margin">
+                            <input formControlName='endDate' matInput [matDatepicker]="picker1" placeholder="End Date:" [errorStateMatcher]="service.errorMatcher">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="service.form.controls['endDate'].errors?.required">This Field is Manditory.</mat-error>
+                            <mat-error *ngIf="service.form.errors?.invalidDates">End Date is required and should be greater than Start Date.</mat-error>
+                        </mat-form-field>                        
+                    </div>
+                    <div class="add-bottom-padding">                                                       
+                        <mat-form-field>
+                          <input matInput formControlName="userName" placeholder="User:" readonly> 
+                          <mat-error *ngIf="service.form.controls['userName'].errors?.required && (service.form.controls['userName'].dirty || service.form.controls['userName'].touched)">This Field is Manditory.</mat-error>                           
+                        </mat-form-field>
+                        <button mat-button mat-icon-button mat-raised-button color="primary" type="button" (click)="searchUser()">
+                          <mat-icon>search</mat-icon>
+                        </button>                
+
+                          <span class="fill-remaining-space"></span>
+                          <button mat-raised-button class="buton-margin" color="primary" type="submit" [disabled]="service.form.invalid">{{service.form.controls['taskId'].value?"Update":"Add Task"}}</button>
+                          <span class="fill-remaining-space"></span>
+                          <button class="buton-margin" mat-raised-button color="warn" type="button" (click)="refreshPage()">Reset</button>
+                    </div>
+                  </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+</div>

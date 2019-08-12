@@ -1,0 +1,116 @@
+<div class="mat-elevation-z8">
+    <form [formGroup]="service.form" class="normal-form" (ngSubmit)="onSubmit(service.form.value)">
+        <mat-grid-list cols="1" rowHeight="300px">
+            <mat-grid-tile>
+                <div class="controles-container">
+                    <input type="hidden" formControlName='projectId'>
+                    <input type="hidden" formControlName='userId'>
+                    <mat-form-field>
+                      <input formControlName='projectName' matInput placeholder="Project Name">
+                      <mat-error *ngIf="service.form.controls['projectName'].errors?.required && (service.form.controls['projectName'].dirty || service.form.controls['projectName'].touched)">This Field is Manditory.</mat-error>
+                    </mat-form-field>
+                    <div class="add-bottom-padding">
+                        <mat-checkbox formControlName='checkDates' (change)="enableDates()" labelPosition='after'><p>Set Start and End Date</p></mat-checkbox>
+                        
+                        <mat-form-field class="buton-margin">
+                            <input formControlName='startDate' matInput [matDatepicker]="picker" placeholder="Start Date:" >
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-error *ngIf="service.form.controls['startDate'].errors?.requiredFromDate">This Field is Manditory.</mat-error>
+                        </mat-form-field>
+                        
+                        <mat-form-field class="buton-margin">
+                            <input formControlName='endDate' matInput [matDatepicker]="picker1" placeholder="End Date:" [errorStateMatcher]="service.errorMatcher">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="service.form.controls['endDate'].errors?.required">This Field is Manditory.</mat-error>
+                            <mat-error *ngIf="service.form.errors?.invalidDates">End Date is required and should be greater than Start Date.</mat-error>
+                        </mat-form-field>                        
+                      </div>
+                      <div class="add-bottom-padding">
+                          <mat-label>Priority:</mat-label>
+                          <span class="fill-remaining-space"></span>
+                        <mat-slider  thumbLabel  [displayWith]="formatLabel" formControlName="priority" tickInterval="1" autoTicks=true showTicks=true  min="1"  max="30" step="1" thumbLabel=true></mat-slider>
+                      </div>
+                      
+                      <div class="add-bottom-padding">
+                                                       
+                          <mat-form-field>
+                            <input matInput formControlName="userName" placeholder="Employee:" readonly> 
+                            <mat-error *ngIf="service.form.controls['userName'].errors?.required&& (service.form.controls['userName'].dirty || service.form.controls['userName'].touched)">This Field is Manditory.</mat-error>                           
+                          </mat-form-field>
+                          <button mat-button mat-icon-button mat-raised-button color="primary" type="button" (click)="empSearch()">
+                              <mat-icon>search</mat-icon>
+                            </button>
+                            <span class="fill-remaining-space"></span>
+                            <button mat-raised-button class="buton-margin" color="primary" type="submit" [disabled]="service.form.invalid">{{service.form.controls['projectId'].value?"Update":"Add"}}</button>
+                            <span class="fill-remaining-space"></span>
+                            <button class="buton-margin" mat-raised-button color="warn" type="button" (click)="onClear()">Reset</button>
+                      </div>
+      
+                    
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>    
+    </form>
+    </div>
+
+    
+<div class="mat-elevation-z8">
+    <mat-table [dataSource]="listData"  matSort>
+        <ng-container matColumnDef="projectId">
+          <mat-header-cell *matHeaderCellDef  mat-sort-header>Project Id</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.projectId}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="projectName">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>Project Name</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.projectName}}</mat-cell>
+          </ng-container>
+        <ng-container matColumnDef="startDate">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>Start Date</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.startDate | date: 'MM/dd/yyyy' }}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="endDate">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>End Date</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.endDate | date: 'MM/dd/yyyy'}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="priority">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>Priority</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.priority}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="user">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>User</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.user.firstName +' '+ element.user.lastName}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tasksCount">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>Task Count</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.tasksCount}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="completedTasks">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header>Completed Tasks</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{element.completedTasks}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <button mat-icon-button (click)="onEdit(row)"><mat-icon>launch</mat-icon></button>
+              <button mat-icon-button color="warn" (click)="onDelete(row.projectId)"><mat-icon>delete_outline</mat-icon></button>
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="loading">
+              <mat-footer-cell *matFooterCellDef colspan="9">
+                Loading data...
+              </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+              <mat-footer-cell *matFooterCellDef colspan="9">
+                No data..
+              </mat-footer-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listData!=null}"></mat-footer-row>
+            <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(listData!=null && listData.data.length==0)}"></mat-footer-row>
+     </mat-table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+  </div>

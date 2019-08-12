@@ -1,0 +1,9 @@
+<nav mat-tab-nav-bar mat-align-tabs="center">
+  
+    <a mat-tab-link class="btn btn-primary navbar-btn"
+       *ngFor="let link of navLinks" [routerLink]="link.link" (click)="activeLink = link.link"
+       [active]="activeLink == link.link">
+      <h3>{{link.label}}</h3>
+    </a>
+    
+  </nav>
