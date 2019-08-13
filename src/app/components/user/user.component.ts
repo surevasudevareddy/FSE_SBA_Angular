@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
 
 loadListData(){
   this.restService.getUsers().subscribe(users => {      
-    console.log("getUSer:"+users);
+
     this.listData = new MatTableDataSource<User>(users);
     this.listData.sort = this.sort;
     this.listData.paginator =this.paginator;
@@ -67,7 +67,7 @@ loadListData(){
     if (this.restService.form.valid) {
       if (!this.restService.form.get('userId').value){
           this.restService.addUser(user).subscribe(res=>{
-          console.log("Add User Response:"+res);
+
           this.refreshPage();
         });
       }else{
@@ -93,7 +93,7 @@ loadListData(){
   onDelete($key){
     if(confirm('Are you sure to delete this record ?')){
     this.restService.deleteUser($key).subscribe(res =>{
-      console.log("User got deleted");
+
       this.loadListData();
     });
     //this.notificationService.warn('! Deleted successfully');

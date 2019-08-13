@@ -29,9 +29,9 @@ export class TaskComponent implements OnInit {
 
   ngOnInit() {    
     if(this.taskId){
-      console.log("taskId #####"+this.taskId)
+
       this.service.getTask(this.taskId).subscribe(data =>{
-        console.log("response :"+data);
+
         this.task = data;
         this.service.populateForm(this.task);
       });      
@@ -43,7 +43,7 @@ export class TaskComponent implements OnInit {
 
   loadProjects(){
     this.projectService.getProjects().subscribe(projects => {      
-    console.log("getUSer:"+projects);
+
     let array:UserData[] = projects.map(project=>{
       return {
         userId: project.projectId,
@@ -55,7 +55,7 @@ export class TaskComponent implements OnInit {
   }
   loadParentTasks(){
     this.service.getParentTasks().subscribe(ptasks => {      
-    console.log("gettasks:"+ptasks);
+
     let array:UserData[] = ptasks.map(ptask=>{
       return {
         userId: ptask.parentId,
@@ -68,7 +68,7 @@ export class TaskComponent implements OnInit {
 
   loadUsers(){
     this.userService.getUsers().subscribe(users => {      
-    console.log("getUSer:"+users);
+
     let array:UserData[] = users.map(user=>{
       return {
         userId: user.userId,
@@ -80,7 +80,7 @@ export class TaskComponent implements OnInit {
 }
 
 openDialog(data : UserData[],title:string){
-    console.log("loading dialog"+JSON.stringify(data));
+
     const diologConfig : MatDialogConfig = new MatDialogConfig();
     diologConfig.disableClose = false;
     diologConfig.autoFocus = true;
@@ -91,7 +91,7 @@ openDialog(data : UserData[],title:string){
   searchProject(){
     const dialogRef = this.openDialog(this.projectList, 'Project');
     dialogRef.afterClosed().subscribe(project =>{
-      console.log("project");     
+  
       this.service.form.controls['projectId'].setValue(project.userId);  
       this.service.form.controls['projectName'].setValue(project.firstName);    
     });    
@@ -99,7 +99,7 @@ openDialog(data : UserData[],title:string){
   searchParent(){
     const dialogRef = this.openDialog(this.parentTaskList,'Parent Task');
     dialogRef.afterClosed().subscribe(parentT =>{
-      console.log("parentT");
+
         this.service.form.controls['parentId'].setValue(parentT.userId);  
         this.service.form.controls['parentTaskName'].setValue(parentT.firstName);    
     });    
@@ -107,7 +107,7 @@ openDialog(data : UserData[],title:string){
   searchUser(){
     const dialogRef = this.openDialog(this.userList,'User');
     dialogRef.afterClosed().subscribe(user =>{
-      console.log("user");
+
         this.service.form.controls['userId'].setValue(user.userId);  
         this.service.form.controls['userName'].setValue(user.firstName);    
     });    
@@ -124,11 +124,11 @@ openDialog(data : UserData[],title:string){
         formdata = _.pick(formdata,['taskName','parentId']);
         let str = JSON.stringify(formdata);
         str = str.replace(/taskName/g,'parentTaskName');
-        console.log(str)        
+       
         formdata = JSON.parse(str);
-        console.log(JSON.stringify(formdata));
+ 
         this.service.addParentTask(formdata).subscribe(res=>{
-          console.log("Add Task Response:"+res);
+
           this.refreshPage();
           this.loadParentTasks();
           this.notificationService.success(':: Submitted successfully');
@@ -138,7 +138,7 @@ openDialog(data : UserData[],title:string){
         formdata = _.extend(formdata,{status : 'ACT'});    
         if (!this.service.form.get('taskId').value){
             this.service.addTask(formdata,parentId,projectId,userId).subscribe(res=>{
-            console.log("Add Task Response:"+res);
+
             this.refreshPage();
             this.notificationService.success(':: Submitted successfully');
           });
@@ -157,7 +157,7 @@ openDialog(data : UserData[],title:string){
       this.service.initilizeFormGroup();
   }
   enableParent(){
-    console.log("check box"+this.service.form.get('chkPTask').value);
+
     if(this.service.form.get('chkPTask').value){
       this.service.form.get('projectName').disable();
       this.service.form.get('startDate').disable();

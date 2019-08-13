@@ -34,7 +34,7 @@ export class ViewTaskComponent implements OnInit {
   searchProject(){
     const dialogRef = this.openDialog(this.projectList, 'Project');
     dialogRef.afterClosed().subscribe(project =>{
-      console.log("project"); 
+
       if(project){
         this.projectName= project.firstName;  
         this.loadListData(project.userId)
@@ -42,7 +42,7 @@ export class ViewTaskComponent implements OnInit {
     });    
   }
   openDialog(data : UserData[],title:string){
-    console.log("loading dialog"+JSON.stringify(data));
+
     const diologConfig : MatDialogConfig = new MatDialogConfig();
     diologConfig.disableClose = false;
     diologConfig.autoFocus = true;
@@ -54,7 +54,7 @@ export class ViewTaskComponent implements OnInit {
   loadListData(projectId :number){
     if(projectId){
       this.service.getTasksByProjectId(projectId).subscribe(tasks => {      
-        console.log("getTasks:"+tasks);
+
         this.listData = new MatTableDataSource<Task>(tasks);
         this.listData.sort = this.sort;
         this.listData.paginator =this.paginator;
@@ -67,7 +67,7 @@ export class ViewTaskComponent implements OnInit {
        })
     }else{
     this.service.getTasks().subscribe(tasks => {      
-      console.log("getTasks:"+tasks);
+
       this.listData = new MatTableDataSource<Task>(tasks);
       this.listData.sort = this.sort;
       this.listData.paginator =this.paginator;
@@ -96,9 +96,9 @@ export class ViewTaskComponent implements OnInit {
       let userId = row.user.userId;
       row = _.omit(row,['parentTask','project','user']);
       row = _.extend(row,{status : 'CMP'});
-      console.log("update Task:"+JSON.stringify(row));
+
     this.service.updateTask(row,parentId,projectId,userId).subscribe(res =>{
-      console.log("User got Ended");
+
       this.notificationService.warn('! Task status changed to END successfully');
       this.loadListData(0);
     });
@@ -106,7 +106,7 @@ export class ViewTaskComponent implements OnInit {
   }
   loadProjects(){
     this.projectService.getProjects().subscribe(projects => {      
-    console.log("getUSer:"+projects);
+
     let array:UserData[] = projects.map(project=>{
       return {
         userId: project.projectId,

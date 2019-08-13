@@ -46,7 +46,7 @@ export class ProjectComponent implements OnInit {
       let userId : string = this.service.form.get('userId').value
       if (!this.service.form.get('projectId').value){
           this.service.addProject(formdata,userId).subscribe(res=>{
-          console.log("Add Project Response:"+res);
+
           this.refreshPage();
           this.notificationService.success(':: Submitted successfully');
         });
@@ -70,7 +70,7 @@ export class ProjectComponent implements OnInit {
   onDelete($key){
     if(confirm('Are you sure to delete this record ?')){
     this.service.deleteProject($key).subscribe(res =>{
-      console.log("User got deleted");
+
       this.loadListData();
     });
     this.notificationService.warn('! Deleted successfully');
@@ -78,7 +78,7 @@ export class ProjectComponent implements OnInit {
   }
   loadListData(){
     this.service.getProjects().subscribe(projects => {      
-      console.log("getProjects:"+projects);
+
       this.listData = new MatTableDataSource<Project>(projects);
       this.cdr.detectChanges();
       this.listData.sort = this.sort;
@@ -100,8 +100,7 @@ export class ProjectComponent implements OnInit {
     this.listData.filter = this.searchKey.trim().toLowerCase();
   }
   enableDates(value){
-    console.log("logevent");
-    console.log(this.service.form.controls['checkDates'].value);
+
     if(!this.service.form.controls['checkDates'].value){
       this.service.form.controls['startDate'].setValue('');
       this.service.form.controls['endDate'].setValue('');
@@ -116,11 +115,11 @@ export class ProjectComponent implements OnInit {
       this.service.form.controls['endDate'].setValue(maxToDate);
       
     }
-    console.log("logevent END");
+
   }
   loadUsers(){
     this.userService.getUsers().subscribe(users => {      
-    console.log("getUSer:"+users);
+
     let array:UserData[] = users.map(user=>{
       return {
         userId: user.userId,
@@ -131,7 +130,7 @@ export class ProjectComponent implements OnInit {
   });
 }
   empSearch(){
-    console.log("loading dialog"+JSON.stringify(this.userList));
+
     const diologConfig : MatDialogConfig = new MatDialogConfig();
     diologConfig.disableClose = false;
     diologConfig.autoFocus = true;
